@@ -3,6 +3,7 @@ import math
 import random
 import enum
 
+# Ni ovo ne koristim
 class Op(enum.Enum):
     PLUS = 0
     MINUS = 1
@@ -35,19 +36,6 @@ def loss(jedinka):
             res /= nums[i]
             s = '(' + s + ')/' + str(nums[i])
     return res, s
-    
-
-# def zapis(jedinka):
-#     global ops_signs
-#     nums = jedinka[0]
-#     ops = jedinka[1]
-#     nb_ops = len(ops)
-
-#     ret = str(nums[0])
-#     for i in range(nb_ops):
-#         ret += ops_signs[ops[i]] + str(nums[i+1])
-
-#     return ret
 
 def random_jedinka(num_set):
     svi = list(num_set)
@@ -69,39 +57,44 @@ def random_jedinka(num_set):
 if __name__ == "__main__":
 
 
-    goal = random.randint(1, 999)
-    veci = random.choice(veci)
-    srednji = random.choice(srednji)
-    mali = random.sample(set(mali), 4)
-    
-    print(f'Pocinjem.... Brojevi: {mali} {srednji} {veci}')
-    print(f'Treba naci: {goal}')
+    print('''(1) za tvoje brojeve\n(2) za random brojeve''')
+    mode = int(input('Izbor: '))
+    if mode == 1:
+        l = input('Brojevi sa kojima radim: ')
+        goal = int(input('Krajnji rezultat: '))
+        num_set = [int(b) for b in l.split()]
+    else:
+        goal = random.randint(1, 999)
+        veci = random.choice(veci)
+        srednji = random.choice(srednji)
+        mali = random.sample(set(mali), 4)
+        
+        print(f'Pocinjem.... Brojevi: {mali} {srednji} {veci}')
+        print(f'Treba naci: {goal}')
 
-    num_set = mali
-    num_set.append(veci)
-    num_set.append(srednji)
+        num_set = mali
+        num_set.append(veci)
+        num_set.append(srednji)
 
+    # Ne koristim jos
+    nb_jedinki = 500    
 
-    nb_jedinki = 500
-    pop = []
-    best_loss = 0
-    best_j = None
-
-    # for i in range(9999):
-    #     j = random_jedinka(num_set)
-    #     curr_loss = loss(j)
-    #     if(curr_loss > best_loss and curr_loss <= goal):
-    #         best_j = j
-    #         best_loss = curr_loss
-    #         print(zapis(best_j) + ' = ' + str(best_loss))
-
-    while best_loss != goal:
-        j = random_jedinka(num_set)
-        curr_loss, zapis = loss(j)
-        if(curr_loss > best_loss and curr_loss <= goal):
-            best_j = j
-            best_loss = curr_loss
-            print(zapis + ' = ' + str(best_loss))
+    for k in range(5):
+        pop = []
+        best_loss = 0
+        best_zapis = ''
+        best_j = None
+        i = 0
+        while best_loss != goal and i < 100000:
+            j = random_jedinka(num_set)
+            curr_loss, zapis = loss(j)
+            if(curr_loss > best_loss and curr_loss <= goal):
+                best_j = j
+                best_loss = curr_loss
+                best_zapis = zapis
+            i += 1
+        print(f'{k+1}. {best_zapis} = {str(best_loss)}')
+                
     
 
     if(best_loss == goal):
