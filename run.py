@@ -19,7 +19,6 @@ ops_signs = ['+', '-', '*', '/', '']
 def loss(jedinka):
     nums = jedinka[0]
     ops = jedinka[1]
-    nb_ops = len(ops)
     res = nums[0]
     s = str(nums[0])
     for i in range(1, len(nums)):
@@ -56,14 +55,19 @@ def random_jedinka(num_set):
 
 if __name__ == "__main__":
 
+    ok = True
 
     print('''(1) za tvoje brojeve\n(2) za random brojeve''')
     mode = int(input('Izbor: '))
     if mode == 1:
-        l = input('Brojevi sa kojima radim: ')
-        goal = int(input('Krajnji rezultat: '))
-        num_set = [int(b) for b in l.split()]
-    else:
+        try:
+            l = input('Brojevi sa kojima radim: ')
+            goal = int(input('Krajnji rezultat: '))
+            num_set = [int(b) for b in l.split()]
+        except:
+            print('Unesi lepo podatke, brojeve u obliku \"5 4 1 2 15 50\" a krajnji rezultat \"546\"')
+            ok = False
+    elif mode == 2:
         goal = random.randint(1, 999)
         veci = random.choice(veci)
         srednji = random.choice(srednji)
@@ -75,29 +79,35 @@ if __name__ == "__main__":
         num_set = mali
         num_set.append(veci)
         num_set.append(srednji)
-
-    # Ne koristim jos
-    nb_jedinki = 500    
-
-    for k in range(5):
-        pop = []
-        best_loss = 0
-        best_zapis = ''
-        best_j = None
-        i = 0
-        while best_loss != goal and i < 100000:
-            j = random_jedinka(num_set)
-            curr_loss, zapis = loss(j)
-            if(curr_loss > best_loss and curr_loss <= goal):
-                best_j = j
-                best_loss = curr_loss
-                best_zapis = zapis
-            i += 1
-        print(f'{k+1}. {best_zapis} = {str(best_loss)}')
-                
-    
-
-    if(best_loss == goal):
-        print('Nasao tacno resnje')
     else:
-        print(f'Razlika {goal-best_loss}')
+        print('Opcije su samo 1 ili 2')
+        ok = False
+    
+    if(ok):
+        # Ne koristim jos
+        nb_jedinki = 500    
+
+        for k in range(5):
+            pop = []
+            best_loss = 0
+            best_zapis = ''
+            best_j = None
+            i = 0
+            while best_loss != goal and i < 100000:
+                j = random_jedinka(num_set)
+                curr_loss, zapis = loss(j)
+                if(curr_loss > best_loss and curr_loss <= goal):
+                    best_j = j
+                    best_loss = curr_loss
+                    best_zapis = zapis
+                i += 1
+            print(f'{k+1}. {best_zapis} = {str(best_loss)}')
+                    
+        
+
+        if(best_loss == goal):
+            print('Nasao tacno resnje')
+        else:
+            print(f'Razlika {goal-best_loss}')
+    else:
+        print('Prekidam!')
