@@ -30,10 +30,10 @@ def loss(jedinka):
             s += '-' + str(nums[i])
         if ops[i-1] == 2:
             res *= nums[i]
-            s = '(' + s + ')*' + str(nums[i]) 
+            s = '(' + s + ')*' + str(nums[i]) if (i > 1) else s + '*' + str(nums[i])
         if ops[i-1] == 3:
             res /= nums[i]
-            s = '(' + s + ')/' + str(nums[i])
+            s = '(' + s + ')/' + str(nums[i]) if (i > 1) else s + '/' + str(nums[i])
     return res, s
 
 def random_jedinka(num_set):
