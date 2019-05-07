@@ -1,2 +1,2 @@
 # MojBroj
-Genetski za Moj broj
+(Genetski) za Moj broj
