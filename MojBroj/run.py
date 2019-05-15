@@ -1,10 +1,10 @@
 import numpy as np
 import math
 import random
-import enum
-
+import matplotlib.pyplot as plt
 # ----------------------- Funkcije za GA -----------------------
 
+ops_signs = ['+', '-', '*', '/', '']
 # Upravo sam zavrsio pisanje ove funkcije i odmah zaboravio kako radi tako da jbg
 def crossover(h1, h2, num_set):
     ns = num_set[:]
@@ -13,7 +13,7 @@ def crossover(h1, h2, num_set):
     nb_nums = len(all_nums)
     j = -1
     i = 0
-    while (-1*j + i < nb_nums):
+    while (-1*j + i < len(all_nums)):
         if(all_nums[i] in ns):
             ns.remove(all_nums[i])
         else:
@@ -40,6 +40,31 @@ def crossover(h1, h2, num_set):
 
     return (all_nums, ops)
 
+def mutate(h, num_set):
+    ns = num_set[:]
+    mut_rate = 0.1
+    nums = h[0]
+    ops = h[1]
+
+    
+    for i in nums:
+        if i in ns:
+            ns.remove(i)
+        
+    if random.random() <= mut_rate:
+        for i in range(len(ops)):
+            if random.random() <= mut_rate:
+                ops[i] = random.randint(0, 3)
+
+        for i in range(len(nums)):
+            if random.random() <= mut_rate:
+                el = nums[i]
+                if ns:
+                    nums[i] = random.choice(ns)
+                ns.append(el)
+        
+    h = nums, ops
+
 
 # --------------------------------------------------------------
 
@@ -47,10 +72,7 @@ def crossover(h1, h2, num_set):
 
 
 # Ako ne upisujemo mi brojeve ovo su liste za random brojeve sa kojima ce da se radi, u sl imamo 4 broja od 1 do 9, jedan od 5 10 15 20 i jedan od 25 50 75 100
-veci = np.arange(25, 101, 25)
-srednji = np.arange(5, 21, 5)
-mali = np.arange(1, 10)
-ops_signs = ['+', '-', '*', '/', '']
+
 
 # loss predstavlja rezultat jedinke, sto je veci loss to je jedinka bolja, jbg
 # racuna se tako sto se svaki broj vezuje za sl operaciju, (1 3 5 10) i (+ - *) ce biti racunati kao (((1)-3)+5)*10
@@ -95,42 +117,42 @@ def random_jedinka(num_set):
     return (nums, ops)
    
 
-def bez_genetskog():
-    global veci, srednji, mali, ops_signs
+def bez_genetskog_random(num_set, goal):
+    
+    print(f'Treba naci: {goal}')
+    for k in range(5):
+            pop = []
+            best_loss = 0
+            best_zapis = ''
+            best_j = None
+            i = 0
+            # i < 100000 ako se zaglavi i ne moze da nadje tacno resenje
+            while best_loss != goal and i < 100000:
+                j = random_jedinka(num_set)
+                curr_loss, zapis = loss(j)
+                if(curr_loss > best_loss and curr_loss <= goal):
+                    best_j = j
+                    best_loss = curr_loss
+                    best_zapis = zapis
+                i += 1
+            print(f'{k+1}. {best_zapis} = {str(best_loss)}')
+    return best_loss
+
+def bez_genetskog_input():
 
     ok = True
 
     # Za 1 radi sa nasim brojevima a za 2 sastavlja random vrednosti
     print('''(1) za tvoje brojeve\n(2) za random brojeve''')
-    mode = int(input('Izbor: '))
-    if mode == 1:
-        try:
-            l = input('Brojevi sa kojima radim: ')
-            goal = int(input('Krajnji rezultat: '))
-            num_set = [int(b) for b in l.split()]
-        except:
-            print('Unesi lepo podatke, brojeve u obliku \"5 4 1 2 15 50\" a krajnji rezultat \"546\"')
-            ok = False
-    elif mode == 2:
-        goal = random.randint(1, 999)
-        veci = random.choice(veci)
-        srednji = random.choice(srednji)
-        mali = random.sample(set(mali), 4)
-        
-        print(f'Pocinjem.... Brojevi: {mali} {srednji} {veci}')
-        print(f'Treba naci: {goal}')
 
-        num_set = mali
-        num_set.append(veci)
-        num_set.append(srednji)
-    else:
-        print('Opcije su samo 1 ili 2')
-        ok = False
-    
+    try:
+        l = input('Brojevi sa kojima radim: ')
+        goal = int(input('Krajnji rezultat: '))
+        num_set = [int(b) for b in l.split()]
+    except:
+        print('Unesi lepo podatke, brojeve u obliku \"5 4 1 2 15 50\" a krajnji rezultat \"546\"')
+        ok = False 
     if(ok):
-        # Ne koristim jos
-        nb_jedinki = 500    
-
         # Nalazi 5 razlicitih nacina kojima dolazi do resenja
         for k in range(5):
             pop = []
@@ -160,40 +182,80 @@ def bez_genetskog():
 
 
 
-
-def GA():
-    global veci, srednji, mali, ops_signs
-
-    goal = random.randint(1, 999)
-    veci = random.choice(veci)
-    srednji = random.choice(srednji)
-    mali = random.sample(set(mali), 4)
-    
-    print(f'Pocinjem.... Brojevi: {mali} {srednji} {veci}')
+# Genetski pravi
+def GA(num_set, goal):    
     print(f'Treba naci: {goal}')
 
-    num_set = mali
-    num_set.append(veci)
-    num_set.append(srednji)
-    pop_vel, max_iter, npop_vel = 500, 500, 500
+    pop_vel, npop_vel = 500, 500
+    max_iter = 200
     pop = []
     for _ in range(pop_vel):
         pop.append(random_jedinka(num_set))
+    
 
     t = 0
     best = None
-    best_f = None
+    best_f = 0
+    best_s = None
     best_ever_f = None
     best_ever_sol = None
     lista_najboljih = []
 
-    while best_f != goal or t < max_iter:
+    while best_f != goal and t < max_iter:
         n_pop = pop[:]
         while(len(n_pop) < pop_vel+npop_vel) and t < max_iter:
             h1 = random.choice(pop)
             h2 = random.choice(pop)
             h3 = crossover(h1, h2, num_set)
+            # print(h3[0])
+            mutate(h3, num_set)
+            if(loss(h3)[0] < goal):
+                n_pop.append(h3)
+                pop = sorted(n_pop, key = lambda x : loss(x)[0], reverse=True)
+                for j in n_pop:
+                    l, s = loss(j)
+                    if(l > goal):
+                        n_pop.remove(j)
+            f, s = loss(pop[0])
+            if(f > best_f and f <= goal):
+                best_s = s
+                best_f = f
+                best = pop[0]
+            t += 1 
+    
+    print(best_s)
+    print(best_f)
+    return best_f
 
+# Ovde poredim GA i random, gde random ispada mnogo bolji, za 95% slucajeva nalazi tacan broj
+# 3 opcije, GA, random i input
+# GA i random zahtevaju listu brojeva sa kojima se radi i resenje, npr. [3, 4, 1, 2, 15, 100] i 567
 if __name__ == "__main__":
-    # bez_genetskog()
-    GA()
+    ga_rez = []
+    random_rez = []
+    goals = []
+    xs = [i for i in range(10)]
+    for i in xs:
+        veci = [25, 50, 75, 100]
+        srednji = [5, 10, 15, 20]
+        mali = [i for i in range(1, 10)]
+
+        goal = random.randint(1, 999)
+        veci = random.choice(veci)
+        srednji = random.choice(srednji)
+        mali = random.sample(set(mali), 4)
+
+        num_set = mali
+        num_set.append(veci)
+        num_set.append(srednji)
+
+        ga_rez.append(GA(num_set, goal))
+        random_rez.append(bez_genetskog_random(num_set, goal))
+        goals.append(goal)
+        print()
+
+    plt.scatter(xs, goals, c='b')
+    plt.plot(xs, ga_rez, c='r', label='GA')
+    plt.plot(xs, random_rez, c='g', label='Random')
+    plt.legend()
+    plt.show()
