@@ -1,6 +1,6 @@
-from collections import Counter
 import random
 
+# vraca listu (skoro) svih srb reci 
 def load_file(file_name):
     ret = []
     with open(file_name, 'r', encoding='utf-8') as f:
@@ -9,6 +9,7 @@ def load_file(file_name):
             ret.append(w.lower())
     return ret
 
+# vraca listu reci(iz words) koju je moguce kreirati sa odredjenim slovima(chars)
 def possible_words(words, chars):
     ret = []
     for word in words:
@@ -35,9 +36,10 @@ if __name__ == "__main__":
         sv = input('Slova (trebaju da su u obliku \'abečhtić\'): ')
         slova = list(sv)
         sve_reci = possible_words(words, slova)
+        # Sortira moguce reci po duzini tako da su poslednje najduze
         sve_reci.sort(key=lambda x: len(x))
         print(f'Izabrana slova: {slova}')
-        print(f'Najduza rec: {sve_reci[-1]}')
+        print(f'Najduzih 5 reci: {sve_reci[-1]} {sve_reci[-2]} {sve_reci[-3]} {sve_reci[-4]} {sve_reci[-5]}')
     else:
         abeceda = list('abcčćdđefghijklmnoprstšuvzž')
         for _ in range(5):
@@ -48,4 +50,4 @@ if __name__ == "__main__":
             sve_reci = possible_words(words, random_slova)
             sve_reci.sort(key=lambda x: len(x))
             print(f'Izabrana slova: {random_slova}')
-            print(f'Najduza rec: {sve_reci[-1]}')
+            print(f'Najduzih 5 reci: {sve_reci[-1]} {sve_reci[-2]} {sve_reci[-3]} {sve_reci[-4]} {sve_reci[-5]}')
