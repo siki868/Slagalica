@@ -3,6 +3,49 @@ import math
 import random
 import enum
 
+# ----------------------- Funkcije za GA -----------------------
+
+# Upravo sam zavrsio pisanje ove funkcije i odmah zaboravio kako radi tako da jbg
+def crossover(h1, h2, num_set):
+    ns = num_set[:]
+    all_nums = h1[0] + h2[0]
+    all_ops = h1[1] + h2[1]
+    nb_nums = len(all_nums)
+    j = -1
+    i = 0
+    while (-1*j + i < nb_nums):
+        if(all_nums[i] in ns):
+            ns.remove(all_nums[i])
+        else:
+            all_nums.remove(all_nums[i])
+        if(all_nums[j] in ns):
+            ns.remove(all_nums[j])
+        else:
+            all_nums.remove(all_nums[j])
+        i += 1
+        j -= 1
+
+    nb_nums = len(all_nums)
+    nb_ops = len(all_ops)
+    if(nb_nums > nb_ops+1):
+        all_nums = all_nums[:-(nb_nums - nb_ops + 1)]
+
+    ops = []
+    for i in range(nb_ops):
+        if(i % 2 == 0):
+            ops.append(all_ops[i])
+        else:
+            ops.append(all_ops[-i])
+    ops = ops[:nb_nums-1]
+
+    return (all_nums, ops)
+
+
+# --------------------------------------------------------------
+
+
+
+
 # Ako ne upisujemo mi brojeve ovo su liste za random brojeve sa kojima ce da se radi, u sl imamo 4 broja od 1 do 9, jedan od 5 10 15 20 i jedan od 25 50 75 100
 veci = np.arange(25, 101, 25)
 srednji = np.arange(5, 21, 5)
@@ -49,10 +92,11 @@ def random_jedinka(num_set):
         svi.remove(el)
         nums.append(el)
 
-    return nums, ops
+    return (nums, ops)
    
 
-if __name__ == "__main__":
+def bez_genetskog():
+    global veci, srednji, mali, ops_signs
 
     ok = True
 
@@ -113,3 +157,43 @@ if __name__ == "__main__":
             print(f'Razlika {goal-best_loss}')
     else:
         print('Prekidam!')
+
+
+
+
+def GA():
+    global veci, srednji, mali, ops_signs
+
+    goal = random.randint(1, 999)
+    veci = random.choice(veci)
+    srednji = random.choice(srednji)
+    mali = random.sample(set(mali), 4)
+    
+    print(f'Pocinjem.... Brojevi: {mali} {srednji} {veci}')
+    print(f'Treba naci: {goal}')
+
+    num_set = mali
+    num_set.append(veci)
+    num_set.append(srednji)
+    pop_vel, max_iter, npop_vel = 500, 500, 500
+    pop = []
+    for _ in range(pop_vel):
+        pop.append(random_jedinka(num_set))
+
+    t = 0
+    best = None
+    best_f = None
+    best_ever_f = None
+    best_ever_sol = None
+    lista_najboljih = []
+
+    while best_f != goal or t < max_iter:
+        n_pop = pop[:]
+        while(len(n_pop) < pop_vel+npop_vel) and t < max_iter:
+            h1 = random.choice(pop)
+            h2 = random.choice(pop)
+            h3 = crossover(h1, h2, num_set)
+
+if __name__ == "__main__":
+    # bez_genetskog()
+    GA()
