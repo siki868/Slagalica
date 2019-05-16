@@ -39,6 +39,7 @@ def crossover(h1, h2, num_set):
     ops = ops[:nb_nums-1]
 
     return (all_nums, ops)
+    
 
 def mutate(h, num_set):
     ns = num_set[:]
@@ -64,6 +65,17 @@ def mutate(h, num_set):
                 ns.append(el)
         
     h = nums, ops
+
+def best_2(pop, goal):
+    r_pop = pop[:]
+    for j in pop:
+        l, _ = loss(j)
+        if(l > goal):
+            r_pop.remove(j)
+
+    r_pop = sorted(r_pop, key = lambda x : loss(x)[0], reverse=True)
+    return r_pop[0], r_pop[1]
+
 
 
 # --------------------------------------------------------------
@@ -198,8 +210,9 @@ def GA(num_set, goal):
     while best_f != goal and t < max_iter:
         n_pop = pop[:]
         while(len(n_pop) < pop_vel+npop_vel) and t < max_iter:
-            h1 = random.choice(pop)
-            h2 = random.choice(pop)
+            # h1 = random.choice(pop)
+            # h2 = random.choice(pop)
+            h1, h2 = best_2(n_pop, goal)
             h3 = crossover(h1, h2, num_set)
             # print(h3[0])
             mutate(h3, num_set)
@@ -255,7 +268,7 @@ def uporedi():
 # 3 opcije - GA, random i input
 # svi zahtevaju zahtevaju listu brojeva sa kojima se rade i resenje, npr. [3, 4, 1, 2, 15, 100] i 567
 if __name__ == "__main__":
-    choice = int(input('(1) custom unos\n(2) random\n(3) GA i random'))
+    choice = int(input('(1) custom unos\n(2) random\n(3) GA i random\n'))
     if choice == 1:
         random_input()
     elif choice == 2:
