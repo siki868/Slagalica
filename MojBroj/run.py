@@ -117,7 +117,7 @@ def random_jedinka(num_set):
     return (nums, ops)
    
 
-def bez_genetskog_random(num_set, goal):
+def random_random(num_set, goal):
     
     print(f'Treba naci: {goal}')
     for k in range(5):
@@ -138,13 +138,7 @@ def bez_genetskog_random(num_set, goal):
             print(f'{k+1}. {best_zapis} = {str(best_loss)}')
     return best_loss
 
-def bez_genetskog_input():
-
-    ok = True
-
-    # Za 1 radi sa nasim brojevima a za 2 sastavlja random vrednosti
-    print('''(1) za tvoje brojeve\n(2) za random brojeve''')
-
+def random_input():
     try:
         l = input('Brojevi sa kojima radim: ')
         goal = int(input('Krajnji rezultat: '))
@@ -228,9 +222,7 @@ def GA(num_set, goal):
     return best_f
 
 # Ovde poredim GA i random, gde random ispada mnogo bolji, za 95% slucajeva nalazi tacan broj
-# 3 opcije, GA, random i input
-# GA i random zahtevaju listu brojeva sa kojima se radi i resenje, npr. [3, 4, 1, 2, 15, 100] i 567
-if __name__ == "__main__":
+def uporedi():
     ga_rez = []
     random_rez = []
     goals = []
@@ -250,7 +242,7 @@ if __name__ == "__main__":
         num_set.append(srednji)
 
         ga_rez.append(GA(num_set, goal))
-        random_rez.append(bez_genetskog_random(num_set, goal))
+        random_rez.append(random_random(num_set, goal))
         goals.append(goal)
         print()
 
@@ -259,3 +251,16 @@ if __name__ == "__main__":
     plt.plot(xs, random_rez, c='g', label='Random')
     plt.legend()
     plt.show()
+
+# 3 opcije - GA, random i input
+# svi zahtevaju zahtevaju listu brojeva sa kojima se rade i resenje, npr. [3, 4, 1, 2, 15, 100] i 567
+if __name__ == "__main__":
+    choice = int(input('(1) custom unos\n(2) random\n(3) GA i random'))
+    if choice == 1:
+        random_input()
+    elif choice == 2:
+        random_random()
+    elif choice == 3:
+        uporedi()
+    else:
+        print('...!')
