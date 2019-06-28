@@ -130,7 +130,6 @@ def random_jedinka(num_set):
    
 
 def random_random(num_set, goal):
-    
     print(f'Treba naci: {goal}')
     for k in range(5):
             pop = []
@@ -151,6 +150,7 @@ def random_random(num_set, goal):
     return best_loss
 
 def random_input():
+    ok = True
     try:
         l = input('Brojevi sa kojima radim: ')
         goal = int(input('Krajnji rezultat: '))
@@ -206,6 +206,7 @@ def GA(num_set, goal):
     best_ever_f = None
     best_ever_sol = None
     lista_najboljih = []
+
 
     while best_f != goal and t < max_iter:
         n_pop = pop[:]
@@ -272,7 +273,19 @@ if __name__ == "__main__":
     if choice == 1:
         random_input()
     elif choice == 2:
-        random_random()
+        veci = [25, 50, 75, 100]
+        srednji = [5, 10, 15, 20]
+        mali = [i for i in range(1, 10)]
+
+        goal = random.randint(1, 999)
+        veci = random.choice(veci)
+        srednji = random.choice(srednji)
+        mali = random.sample(set(mali), 4)
+
+        num_set = mali
+        num_set.append(veci)
+        num_set.append(srednji)
+        random_random(num_set, goal)
     elif choice == 3:
         uporedi()
     else:
