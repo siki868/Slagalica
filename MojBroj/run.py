@@ -83,12 +83,11 @@ def best_2(pop, goal):
 
 
 
-# Ako ne upisujemo mi brojeve ovo su liste za random brojeve sa kojima ce da se radi, u sl imamo 4 broja od 1 do 9, jedan od 5 10 15 20 i jedan od 25 50 75 100
 
 
 # loss predstavlja rezultat jedinke, sto je veci loss to je jedinka bolja, jbg
 # racuna se tako sto se svaki broj vezuje za sl operaciju, (1 3 5 10) i (+ - *) ce biti racunati kao (((1)-3)+5)*10
-# s je tekstualna reprezentacija jedinke
+# s je tekstualni oblik jedinke
 def loss(jedinka):
     nums = jedinka[0]
     ops = jedinka[1]
@@ -109,7 +108,7 @@ def loss(jedinka):
             s = '(' + s + ')/' + str(nums[i]) if (i > 1) else s + '/' + str(nums[i])
     return res, s
 
-# svi je lista brojeva sa moze da se radi, nums je lista brojeva sa kojim jedinka radi, onb_obs je broj operacija u jedinki, ops su operacije
+# svi je lista brojeva sa kojima moze da se radi, nums je lista brojeva sa kojim jedinka radi, nb_obs je broj operacija u jedinki, ops su operacije
 # ops - plus(0), minus(1), puta(2), deljenje(3) 
 # jedinka ce da vrati brojeve i operacije, npr brojevi: 1 3 25 a operacije 0 1(+ -)
 def random_jedinka(num_set):
@@ -155,7 +154,6 @@ def random_input():
         l = input('Brojevi sa kojima radim: ')
         goal = int(input('Krajnji rezultat: '))
         num_set = [int(b) for b in l.split()]
-        ok = True
     except:
         print('Unesi lepo podatke, brojeve u obliku \"5 4 1 2 15 50\" a krajnji rezultat \"546\"')
         ok = False 
