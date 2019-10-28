@@ -36,10 +36,10 @@ if __name__ == "__main__":
         sv = input('Slova (trebaju da su u obliku \'abečhtić\'): ')
         slova = list(sv)
         sve_reci = possible_words(words, slova)
-        # Sortira moguce reci po duzini tako da su poslednje najduze
-        sve_reci.sort(key=lambda x: len(x))
+        # Sortira moguce reci po duzini
+        sve_reci.sort(key=lambda x: len(x), reverse=True)
         print(f'Izabrana slova: {slova}')
-        print(f'Najduzih 5 reci: {sve_reci[-1]} {sve_reci[-2]} {sve_reci[-3]} {sve_reci[-4]} {sve_reci[-5]}')
+        print(f'Najduzih 5 reci: {" ".join(sve_reci[:5])}')
     else:
         abeceda = list('abcčćdđefghijklmnoprstšuvzž')
         for _ in range(5):
@@ -48,6 +48,6 @@ if __name__ == "__main__":
                 random_slova.append(random.choice(abeceda))
 
             sve_reci = possible_words(words, random_slova)
-            sve_reci.sort(key=lambda x: len(x))
+            sve_reci.sort(key=lambda x: len(x), reverse=True)
             print(f'Izabrana slova: {random_slova}')
-            print(f'Najduzih 5 reci: {sve_reci[-1]} {sve_reci[-2]} {sve_reci[-3]} {sve_reci[-4]} {sve_reci[-5]}')
+            print(f'Najduzih 5 reci: {" ".join(sve_reci[:5])}')

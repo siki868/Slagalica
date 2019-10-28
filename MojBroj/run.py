@@ -155,6 +155,7 @@ def random_input():
         l = input('Brojevi sa kojima radim: ')
         goal = int(input('Krajnji rezultat: '))
         num_set = [int(b) for b in l.split()]
+        ok = True
     except:
         print('Unesi lepo podatke, brojeve u obliku \"5 4 1 2 15 50\" a krajnji rezultat \"546\"')
         ok = False 
